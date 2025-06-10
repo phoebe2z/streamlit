@@ -128,8 +128,10 @@ def show_surface_histogram():
     # Plot histograms
     for prop in properties:
         fig, ax = plt.subplots(figsize=(7, 4))
-        min_val = min(min(real_features[prop]), min(fake_features[prop]))
-        max_val = max(max(real_features[prop]), max(fake_features[prop]))
+        real_data = real_features[prop]
+        fake_data = fake_features[prop]
+        min_val = min(np.min(real_data), np.min(fake_data))
+        max_val = max(np.max(real_data), np.max(fake_data))
         ax.hist(real_features[prop], bins=20, alpha=0.6, label='Real', color='skyblue', range=(min_val, max_val))
         ax.hist(fake_features[prop], bins=20, alpha=0.6, label='Fake', color='salmon', range=(min_val, max_val))
         ax.set_title(f"Texture Feature: {prop.capitalize()}")
