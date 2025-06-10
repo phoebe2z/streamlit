@@ -43,15 +43,19 @@ with tabs[2]:
 
     # Simulated histogram plotting functions per category (replace with real data)
 def show_shadow_histogram():
-    st.subheader("Shadow Angle Distribution")
-    shadow_fake = np.random.normal(90, 5, 100)
-    shadow_real = np.random.normal(90, 15, 100)
-    plt.hist(shadow_real, bins=30, alpha=0.6, label='Real')
-    plt.hist(shadow_fake, bins=30, alpha=0.6, label='Fake')
-    plt.xlabel("Shadow Angle (°)")
-    plt.ylabel("Frequency")
-    plt.legend()
-    st.pyplot(plt)
+    st.header("🌗 Shadow Angle Distribution")
+    real_angles = np.load("histogram_data/real_shadow_angles.npy")
+    fake_angles = np.load("histogram_data/fake_shadow_angles.npy")
+
+    fig, ax = plt.subplots(figsize=(7, 4))
+    angle_min = min(min(real_angles), min(fake_angles))
+    angle_max = max(max(real_angles), max(fake_angles))
+    ax.hist(real_angles, bins=30, alpha=0.6, label="Real Shadows", color="green", range=(angle_min, angle_max))
+    ax.hist(fake_angles, bins=30, alpha=0.6, label="Fake Shadows", color="red", range=(angle_min, angle_max))
+    ax.set_xlabel("Angle (degrees)")
+    ax.set_ylabel("Frequency")
+    ax.legend()
+    st.pyplot(fig)
 
 def show_flag_histogram():
     st.subheader("Flag Contour Complexity")
@@ -119,7 +123,7 @@ analysis_map = {
 }
 
 # Streamlit UI
-st.title("AI-Based Lunar Image Analysis")
+st.title("AI-Based Moon Landing Image Analysis")
 choice = st.selectbox("Choose a category for analysis:", list(analysis_map.keys()))
 analysis_map[choice]()
 
@@ -132,6 +136,12 @@ explanations = {
     "Surface": "Fake surfaces often show higher texture energy and uniformity, suggesting artificial patterning.",
     "Lander": "Fake landers have fewer and simpler contours; real landers exhibit detailed and diverse shapes.",
 }
+
+explanations["Shadow"] = [
+    "Fake images have shadow angles highly concentrated around 90°, suggesting a consistent light direction likely caused by AI generation or manually configured lighting.",
+    "Real images also show clustering near 90°, but with a wider spread due to natural variations in sunlight, terrain, and camera angles.",
+    "Some extreme angles in real images may be caused by terrain features, multiple reflected light sources, or shadow detection errors."
+]
 
 st.markdown(f"**Conclusion**: {explanations[choice]}")
 
