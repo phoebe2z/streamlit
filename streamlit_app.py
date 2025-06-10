@@ -54,7 +54,9 @@ def show_shadow_histogram():
     ax.hist(fake_angles, bins=30, alpha=0.6, label="Fake Shadows", color="red", range=(angle_min, angle_max))
     ax.set_xlabel("Angle (degrees)")
     ax.set_ylabel("Frequency")
+    ax.set_title('Shadow Angle Distribution')
     ax.legend()
+    ax.grid(True)
     st.pyplot(fig)
 
 def show_flag_histogram():
@@ -71,6 +73,7 @@ def show_flag_histogram():
     ax.hist(fake_complexities, bins=20, alpha=0.6, color='red', label='Fake Flags', range=(min_complexity, max_complexity))
     ax.set_xlabel('Contour Complexity')
     ax.set_ylabel('Frequency')
+    ax.set_title('Contour Complexity of Flags')
     ax.legend()
     ax.grid(True)
     st.pyplot(fig)
@@ -144,12 +147,12 @@ explanations = {
     "Lander": "Fake landers have fewer and simpler contours; real landers exhibit detailed and diverse shapes.",
 }
 
-explanations["Shadow"] = """\ 
+explanations["Shadow"] = """ 
 - The fake images have shadow angles highly concentrated around 90°, indicating a consistent light direction, so possibly a result of AI or manually configured lighting.
 - The real images also cluster near 90°, but with a wider spread, reflecting natural variations in shadow direction due to terrain, camera angle, and real sunlight.
 - A few extreme angles in the real images may result from terrain features, multiple reflected lights, or shadow detection errors."""
 
-explanations["Flag"] = """\ 
+explanations["Flag"] = """ 
 - Fake flag images tend to cluster around mid-level contour complexity, likely due to simulated flag waving with limited variability.
 - Real flag images show a wider distribution of complexity, reflecting natural physical dynamics like fabric motion, lighting, and camera angle variations.
 - This distribution suggests that real flag photos are less uniform and more organically complex, while fake ones are more constrained and repetitive."""
