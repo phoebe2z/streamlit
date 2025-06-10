@@ -33,7 +33,7 @@ with tabs[1]:
     with col1:
         st.image("images/real_sample.jpg", caption="Real Image (Grayscale)", use_column_width=True)
     with col2:
-        st.image("images/fake_sample.jpg", caption="Fake Image (Grayscale)", use_column_width=True)
+        st.image("images/fake_sample.png", caption="Fake Image (Grayscale)", use_column_width=True)
 
 # ---- Tab 3: Image Analysis ----
 with tabs[2]:
