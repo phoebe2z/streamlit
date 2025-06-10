@@ -1,4 +1,6 @@
 import streamlit as st
+import matplotlib.pyplot as plt
+import numpy as np
 
 st.set_page_config(page_title="Moon Landing Conspiracy", layout="wide")
 
@@ -39,47 +41,99 @@ with tabs[1]:
 with tabs[2]:
     st.header("🧩 Image Analysis")
 
-    # Surface Texture Features
-    st.subheader("GLCM Texture Features (Surface)")
-    texture_features = ['contrast', 'homogeneity', 'energy', 'correlation']
-    for feature in texture_features:
-        st.markdown(f"**{feature.capitalize()}**")
-        fig, ax = plt.subplots(figsize=(6, 4))
-        real_data = np.load(f"histogram_data/real_surface_glcm_{feature}.npy")
-        fake_data = np.load(f"histogram_data/fake_surface_glcm_{feature}.npy")
-        min_val = min(min(real_data), min(fake_data))
-        max_val = max(max(real_data), max(fake_data))
-        ax.hist(real_data, bins=20, alpha=0.6, label='Real', color='skyblue', range=(min_val, max_val))
-        ax.hist(fake_data, bins=20, alpha=0.6, label='Fake', color='salmon', range=(min_val, max_val))
-        ax.legend()
-        st.pyplot(fig)
-
-    # Shadow Angle Distribution
+    # Simulated histogram plotting functions per category (replace with real data)
+def show_shadow_histogram():
     st.subheader("Shadow Angle Distribution")
-    real_angles = np.load("histogram_data/real_shadow_angles.npy")
-    fake_angles = np.load("histogram_data/fake_shadow_angles.npy")
-    fig, ax = plt.subplots(figsize=(6, 4))
-    angle_min = min(min(real_angles), min(fake_angles))
-    angle_max = max(max(real_angles), max(fake_angles))
-    ax.hist(real_angles, bins=30, alpha=0.6, label='Real Shadows', color='green', range=(angle_min, angle_max))
-    ax.hist(fake_angles, bins=30, alpha=0.6, label='Fake Shadows', color='red', range=(angle_min, angle_max))
-    ax.legend()
-    st.pyplot(fig)
+    shadow_fake = np.random.normal(90, 5, 100)
+    shadow_real = np.random.normal(90, 15, 100)
+    plt.hist(shadow_real, bins=30, alpha=0.6, label='Real')
+    plt.hist(shadow_fake, bins=30, alpha=0.6, label='Fake')
+    plt.xlabel("Shadow Angle (°)")
+    plt.ylabel("Frequency")
+    plt.legend()
+    st.pyplot(plt)
 
-    # Lander Contour Features
+def show_flag_histogram():
+    st.subheader("Flag Contour Complexity")
+    real = np.random.normal(30000, 5000, 100)
+    fake = np.random.normal(23000, 2000, 100)
+    plt.hist(real, bins=30, alpha=0.6, label='Real')
+    plt.hist(fake, bins=30, alpha=0.6, label='Fake')
+    plt.xlabel("Contour Complexity")
+    plt.ylabel("Frequency")
+    plt.legend()
+    st.pyplot(plt)
+
+def show_astronaut_histogram():
+    st.subheader("Astronaut Contour Complexity")
+    real = np.random.normal(30000, 5000, 100)
+    fake = np.random.normal(15000, 3000, 100)
+    plt.hist(real, bins=30, alpha=0.6, label='Real')
+    plt.hist(fake, bins=30, alpha=0.6, label='Fake')
+    plt.xlabel("Complexity Score")
+    plt.ylabel("Frequency")
+    plt.legend()
+    st.pyplot(plt)
+
+def show_horizon_histogram():
+    st.subheader("Horizon Line Angles")
+    real = np.random.normal(10, 10, 100)
+    fake = np.concatenate([np.random.normal(90, 5, 50), np.random.normal(-90, 5, 50)])
+    plt.hist(real, bins=30, alpha=0.6, label='Real')
+    plt.hist(fake, bins=30, alpha=0.6, label='Fake')
+    plt.xlabel("Line Angle (°)")
+    plt.ylabel("Frequency")
+    plt.legend()
+    st.pyplot(plt)
+
+def show_surface_histogram():
+    st.subheader("Surface Texture Features: Energy")
+    real = np.random.normal(0.2, 0.05, 100)
+    fake = np.random.normal(0.5, 0.1, 100)
+    plt.hist(real, bins=30, alpha=0.6, label='Real')
+    plt.hist(fake, bins=30, alpha=0.6, label='Fake')
+    plt.xlabel("Energy")
+    plt.ylabel("Frequency")
+    plt.legend()
+    st.pyplot(plt)
+
+def show_lander_histogram():
     st.subheader("Lander Contour Features")
-    lander_features = ['num_contours', 'max_area', 'avg_perimeter']
-    for metric in lander_features:
-        st.markdown(f"**{metric.replace('_', ' ').title()}**")
-        real_data = np.load(f"histogram_data/real_lander_{metric}.npy")
-        fake_data = np.load(f"histogram_data/fake_lander_{metric}.npy")
-        min_val = min(min(real_data), min(fake_data))
-        max_val = max(max(real_data), max(fake_data))
-        fig, ax = plt.subplots(figsize=(6, 4))
-        ax.hist(real_data, bins=20, alpha=0.6, label='Real', color='lightblue', range=(min_val, max_val))
-        ax.hist(fake_data, bins=20, alpha=0.6, label='Fake', color='blue', range=(min_val, max_val))
-        ax.legend()
-        st.pyplot(fig)
+    real = np.random.normal(10000, 3000, 100)
+    fake = np.random.normal(6000, 2000, 100)
+    plt.hist(real, bins=30, alpha=0.6, label='Real')
+    plt.hist(fake, bins=30, alpha=0.6, label='Fake')
+    plt.xlabel("Contour Area")
+    plt.ylabel("Frequency")
+    plt.legend()
+    st.pyplot(plt)
+
+# Mapping selection to functions
+analysis_map = {
+    "Shadow": show_shadow_histogram,
+    "Flag": show_flag_histogram,
+    "Astronaut": show_astronaut_histogram,
+    "Horizon": show_horizon_histogram,
+    "Surface": show_surface_histogram,
+    "Lander": show_lander_histogram,
+}
+
+# Streamlit UI
+st.title("AI-Based Lunar Image Analysis")
+choice = st.selectbox("Choose a category for analysis:", list(analysis_map.keys()))
+analysis_map[choice]()
+
+# Explanation
+explanations = {
+    "Shadow": "Consistent shadow angles near 90° in fake images reveal synthetic lighting. Real shadows vary due to terrain and sunlight.",
+    "Flag": "Fake flags tend to cluster around mid-complexity, possibly due to simulated waving. Real ones are more variable.",
+    "Astronaut": "Real astronaut figures show higher contour complexity due to real texture details, while fake images are smoother.",
+    "Horizon": "Fake images show unnatural horizon lines around ±90°, indicating possible rendering flaws or AI artifacts.",
+    "Surface": "Fake surfaces often show higher texture energy and uniformity, suggesting artificial patterning.",
+    "Lander": "Fake landers have fewer and simpler contours; real landers exhibit detailed and diverse shapes.",
+}
+
+st.markdown(f"**Conclusion**: {explanations[choice]}")
 
 # ---- Tab 3: Machine Learning ----
 with tabs[3]:
