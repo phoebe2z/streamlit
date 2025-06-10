@@ -1,3 +1,10 @@
 streamlit
 matplotlib
 numpy
+pandas
+os
+cv2
+scipy
+tensorflow
+tempfile
+plotly
