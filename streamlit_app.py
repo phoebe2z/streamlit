@@ -122,14 +122,14 @@ def show_surface_histogram():
     properties = ['contrast', 'homogeneity', 'energy', 'correlation']
     
     # Extract features
-    real_features = np.load("histogram_data/real_surface_features.npy", allow_pickle=True)
-    fake_features = np.load("histogram_data/fake_surface_features.npy", allow_pickle=True)
+    real_features = np.load("histogram_data/real_surface_features.npy", allow_pickle=True).item()
+    fake_features = np.load("histogram_data/fake_surface_features.npy", allow_pickle=True).item()
     
     # Plot histograms
     for prop in properties:
         fig, ax = plt.subplots(figsize=(7, 4))
-        min_val = min(min(real_features), min(fake_features))
-        max_val = max(max(real_features), max(fake_features))
+        min_val = min(min(real_features[prop]), min(fake_features[prop]))
+        max_val = max(max(real_features[prop]), max(fake_features[prop]))
         ax.hist(real_features[prop], bins=20, alpha=0.6, label='Real', color='skyblue', range=(min_val, max_val))
         ax.hist(fake_features[prop], bins=20, alpha=0.6, label='Fake', color='salmon', range=(min_val, max_val))
         ax.set_title(f"Texture Feature: {prop.capitalize()}")
