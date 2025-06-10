@@ -3,7 +3,7 @@ matplotlib
 numpy
 pandas
 os
-opencv
+opencv-python-headless
 scipy
 tensorflow
 tempfile
