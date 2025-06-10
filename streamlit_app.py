@@ -122,8 +122,8 @@ def show_surface_histogram():
     properties = ['contrast', 'homogeneity', 'energy', 'correlation']
     
     # Extract features
-    real_features = np.load("histogram_data/real_surface_features.npy")
-    fake_features = np.load("histogram_data/fake_surface_features.npy")
+    real_features = np.load("histogram_data/real_surface_features.npy", allow_pickle=True)
+    fake_features = np.load("histogram_data/fake_surface_features.npy", allow_pickle=True)
     
     # Plot histograms
     for prop in properties:
