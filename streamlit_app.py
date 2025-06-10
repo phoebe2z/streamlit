@@ -80,25 +80,39 @@ def show_flag_histogram():
 
 def show_astronaut_histogram():
     st.subheader("Astronaut Contour Complexity")
-    real = np.random.normal(30000, 5000, 100)
-    fake = np.random.normal(15000, 3000, 100)
-    plt.hist(real, bins=30, alpha=0.6, label='Real')
-    plt.hist(fake, bins=30, alpha=0.6, label='Fake')
-    plt.xlabel("Complexity Score")
-    plt.ylabel("Frequency")
-    plt.legend()
-    st.pyplot(plt)
+    # Run analysis
+    real_complexities = np.load("histogram_data/real_astronaut_complexity.npy")
+    fake_complexities = np.load("histogram_data/fake_astronaut_complexity.npy")
+    
+    # Plotting the results
+    fig, ax = plt.subplots(figsize=(7, 4))
+    min_complexity = min(min(real_complexities), min(fake_complexities))
+    max_complexity = max(max(real_complexities), max(fake_complexities))
+    ax.hist(real_complexities, bins=20, alpha=0.6, color='purple', label='Real Flags', range=(min_complexity, max_complexity))
+    ax.hist(fake_complexities, bins=20, alpha=0.6, color='red', label='Fake Flags', range=(min_complexity, max_complexity))
+    ax.set_xlabel('Contour Complexity')
+    ax.set_ylabel('Frequency')
+    ax.set_title('Contour Complexity of Astronauts')
+    ax.legend()
+    ax.grid(True)
+    st.pyplot(fig)
 
 def show_horizon_histogram():
     st.subheader("Horizon Line Angles")
-    real = np.random.normal(10, 10, 100)
-    fake = np.concatenate([np.random.normal(90, 5, 50), np.random.normal(-90, 5, 50)])
-    plt.hist(real, bins=30, alpha=0.6, label='Real')
-    plt.hist(fake, bins=30, alpha=0.6, label='Fake')
-    plt.xlabel("Line Angle (°)")
-    plt.ylabel("Frequency")
+    # Run analysis for real and fake sets
+    real_angles = np.load("histogram_data/real_horizon_angles.npy")
+    fake_angles = np.load("histogram_data/fake_horizon_angles.npy")
+    
+    # Plot histograms
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.hist(real_angles, bins=30, alpha=0.7, label='Real', color='skyblue')
+    ax.hist(fake_angles, bins=30, alpha=0.7, label='Fake', color='salmon')
+    ax.set_xlabel("Line Angle (degrees)")
+    ax.set_ylabel("Frequency")
+    ax.set_title("Distribution of Detected Line Angles")
     plt.legend()
-    st.pyplot(plt)
+    plt.grid(True)
+    st.pyplot(fig)
 
 def show_surface_histogram():
     st.subheader("Surface Texture Features: Energy")
@@ -156,6 +170,16 @@ explanations["Flag"] = """
 - Fake flag images tend to cluster around mid-level contour complexity, likely due to simulated flag waving with limited variability.
 - Real flag images show a wider distribution of complexity, reflecting natural physical dynamics like fabric motion, lighting, and camera angle variations.
 - This distribution suggests that real flag photos are less uniform and more organically complex, while fake ones are more constrained and repetitive."""
+
+explanations["Astronaut"] = """ 
+- The contour complexity of real astronaut images tends to be higher, reflecting intricate textures, lighting variations, and authentic visual noise.
+- In contrast, fake images cluster in the lower complexity range, suggesting smoother, less detailed rendering, possibly due to AI generation or simplified edits.
+- This supports the hypothesis that real visual content often exhibits richer and more variable structure, while fakes are more uniform and predictable."""
+
+explanations["Horizon"] = """ 
+- Real images have line angles mainly fall between -20° and +30°, which distribution is compact, showing natural orientation.
+- Fake images have strong peaks at ±90°, indicates extreme tilts or vertical lines.
+- Real images show natural and consistent horizon angles, while fake images exhibit abnormal angle peaks, useful for detecting falsification."""
 
 
 st.markdown(f"**Conclusion**: {explanations[choice]}")
