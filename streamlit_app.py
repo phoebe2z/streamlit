@@ -61,7 +61,7 @@ def show_flag_histogram():
     st.subheader("Flag Contour Complexity")
     # Run analysis
     real_complexities = np.load("histogram_data/real_flag_complexity.npy")
-    fake_complexities = np.load("histogram_data/real_flag_complexity.npy")
+    fake_complexities = np.load("histogram_data/fake_flag_complexity.npy")
     
     # Plotting the results
     fig, ax = plt.subplots(figsize=(7, 4))
