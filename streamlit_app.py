@@ -146,12 +146,12 @@ explanations = {
     "Lander": "Fake landers have fewer and simpler contours; real landers exhibit detailed and diverse shapes.",
 }
 
-explanations["Shadow"] = """\
+explanations["Shadow"] = """\\n
 - The fake images have shadow angles highly concentrated around 90°, indicating a consistent light direction, so possibly a result of AI or manually configured lighting.
 - The real images also cluster near 90°, but with a wider spread, reflecting natural variations in shadow direction due to terrain, camera angle, and real sunlight.
 - A few extreme angles in the real images may result from terrain features, multiple reflected lights, or shadow detection errors."""
 
-explanations["Flag"] = """\
+explanations["Flag"] = """\\n
 - Fake flag images tend to cluster around mid-level contour complexity, likely due to simulated flag waving with limited variability.
 - Real flag images show a wider distribution of complexity, reflecting natural physical dynamics like fabric motion, lighting, and camera angle variations.
 - This distribution suggests that real flag photos are less uniform and more organically complex, while fake ones are more constrained and repetitive."""
