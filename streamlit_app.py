@@ -59,14 +59,23 @@ def show_shadow_histogram():
 
 def show_flag_histogram():
     st.subheader("Flag Contour Complexity")
-    real = np.random.normal(30000, 5000, 100)
-    fake = np.random.normal(23000, 2000, 100)
-    plt.hist(real, bins=30, alpha=0.6, label='Real')
-    plt.hist(fake, bins=30, alpha=0.6, label='Fake')
-    plt.xlabel("Contour Complexity")
-    plt.ylabel("Frequency")
+    # Run analysis
+    real_complexities = np.load("histogram_data/real_flag_complexity.npy")
+    fake_complexities = np.load("histogram_data/real_flag_complexity.npy")
+    
+    # Plotting the results
+    fig, ax = plt.subplots(figsize=(7, 4))
+    min_complexity = min(min(real_complexities), min(fake_complexities))
+    max_complexity = max(max(real_complexities), max(fake_complexities))
+    plt.hist(real_complexities, bins=20, alpha=0.6, color='purple', label='Real Flags', range=(min_complexity, max_complexity))
+    plt.hist(fake_complexities, bins=20, alpha=0.6, color='red', label='Fake Flags', range=(min_complexity, max_complexity))
+    plt.xlabel('Contour Complexity')
+    plt.ylabel('Frequency')
+    plt.title('Contour Complexity of Flags')
     plt.legend()
-    st.pyplot(plt)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
 
 def show_astronaut_histogram():
     st.subheader("Astronaut Contour Complexity")
@@ -137,11 +146,16 @@ explanations = {
     "Lander": "Fake landers have fewer and simpler contours; real landers exhibit detailed and diverse shapes.",
 }
 
-explanations["Shadow"] = [
-    "Fake images have shadow angles highly concentrated around 90°, suggesting a consistent light direction likely caused by AI generation or manually configured lighting.",
-    "Real images also show clustering near 90°, but with a wider spread due to natural variations in sunlight, terrain, and camera angles.",
-    "Some extreme angles in real images may be caused by terrain features, multiple reflected light sources, or shadow detection errors."
-]
+explanations["Shadow"] = """\
+- The fake images have shadow angles highly concentrated around 90°, indicating a consistent light direction, so possibly a result of AI or manually configured lighting.
+- The real images also cluster near 90°, but with a wider spread, reflecting natural variations in shadow direction due to terrain, camera angle, and real sunlight.
+- A few extreme angles in the real images may result from terrain features, multiple reflected lights, or shadow detection errors."""
+
+explanations["Flag"] = """\
+- Fake flag images tend to cluster around mid-level contour complexity, likely due to simulated flag waving with limited variability.
+- Real flag images show a wider distribution of complexity, reflecting natural physical dynamics like fabric motion, lighting, and camera angle variations.
+- This distribution suggests that real flag photos are less uniform and more organically complex, while fake ones are more constrained and repetitive."""
+
 
 st.markdown(f"**Conclusion**: {explanations[choice]}")
 
