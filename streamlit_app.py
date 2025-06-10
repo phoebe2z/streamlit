@@ -211,9 +211,7 @@ explanations["Surface"] = """
 
 4.Correlation
 - Both real and fake images have high correlation, but fake images show more clustering around 0.98–0.99.
-- High correlation in fake images suggests more uniform pixel transitions, possibly synthetic.
-
-- Texture features reveal distinct statistical tendencies between real and fake lunar surface images. Fake surfaces often appear smoother, more homogeneous, and exhibit higher repetition and artificial uniformity."""
+- High correlation in fake images suggests more uniform pixel transitions, possibly synthetic."""
 
 
 st.markdown(f"**Conclusion**: {explanations[choice]}")
