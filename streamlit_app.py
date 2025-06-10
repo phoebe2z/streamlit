@@ -200,12 +200,15 @@ explanations["Surface"] = """
 1.Contrast
 - Fake images exhibit a broader range of contrast values, with some extreme outliers reaching above 700. Most real images cluster below 150.
 - Fake images tend to have harsher or more inconsistent textures, possibly due to rendering or compositing artifacts. 
+
 2.Homogeneity
 - Real images show middle homogeneity overall. peaking around 0.3-0.6, suggesting more natural texture variation. While fake images have more distributed values, too high or too low.
 - Fake textures tend to be either overly smoothed or exhibit abrupt patterns, leading to a wider range of homogeneity. 
+
 3. Energy
 - Fake images dominate in high-energy values (0.3–0.7), while real images mostly lie below 0.25.
 - Energy reflects texture repetition. High energy in fake images may indicate repetitive or templated patterns. 
+
 4.Correlation
 - Both real and fake images have high correlation, but fake images show more clustering around 0.98–0.99.
 - High correlation in fake images suggests more uniform pixel transitions, possibly synthetic.
