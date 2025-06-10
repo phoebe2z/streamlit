@@ -141,15 +141,23 @@ def show_surface_histogram():
         st.pyplot(fig)
 
 def show_lander_histogram():
-    st.subheader("Lander Contour Features")
-    real = np.random.normal(10000, 3000, 100)
-    fake = np.random.normal(6000, 2000, 100)
-    plt.hist(real, bins=30, alpha=0.6, label='Real')
-    plt.hist(fake, bins=30, alpha=0.6, label='Fake')
-    plt.xlabel("Contour Area")
-    plt.ylabel("Frequency")
-    plt.legend()
-    st.pyplot(plt)
+    # Collect features
+    real_features = np.load("histogram_data/real_lander_features.npy", allow_pickle=True).item()
+    fake_features = np.load("histogram_data/fake_lander_features.npy", allow_pickle=True).item()
+    
+    # Plot histogram comparison
+    for metric in ['num_contours', 'max_area', 'avg_perimeter']:
+        fig, ax = plt.subplots(figsize=(7, 4))
+        min_val = min(min(real_features[metric]), min(fake_features[metric]))
+        max_val = max(max(real_features[metric]), max(fake_features[metric]))
+        ax.hist(real_features[metric], bins=20, alpha=0.6, label='Real', color='lightblue', range=(min_val, max_val))
+        ax.hist(fake_features[metric], bins=20, alpha=0.6, label='Fake', color='blue', range=(min_val, max_val))
+        ax.set_title(f'Lander Feature: {metric.replace("_", " ").title()}')
+        ax.set_xlabel(metric.replace('_', ' ').title())
+        ax.set_ylabel('Frequency')
+        ax.legend()
+        st.pyplot(fig)
+
 
 # Mapping selection to functions
 analysis_map = {
@@ -206,12 +214,26 @@ explanations["Surface"] = """
 - Fake textures tend to be either overly smoothed or exhibit abrupt patterns, leading to a wider range of homogeneity. 
 
 3. Energy
-- Fake images dominate in high-energy values (0.3–0.7), while real images mostly lie below 0.25.
+- Fake images dominate in high-energy values (0.3–0.7), while real images mostly lie below 0.3.
 - Energy reflects texture repetition. High energy in fake images may indicate repetitive or templated patterns. 
 
 4.Correlation
 - Both real and fake images have high correlation, but fake images show more clustering around 0.98–0.99.
 - High correlation in fake images suggests more uniform pixel transitions, possibly synthetic."""
+
+explanations["Lander"] = """ 
+1.Num Contours
+- Fake images tend to have more instances with low contour counts, while real images are more evenly spread and can reach higher counts.
+- This may suggest that fake images often exhibit simpler structures in the lander region, possibly due to generative model artifacts or lack of detail.
+
+2.Max Area
+- Max area quantifies the largest detected contour, usually representing the main body of the lander.
+- Real images tend to contain larger contour areas, indicating more coherent and possibly more detailed lander shapes.
+- Fake images show more limited area sizes, with few outliers.
+
+3.Average Perimeter
+- Fake images actually show a wider spread in average contour perimeters, ranging from very low to very high values. This suggests that fake landers may have either overly simplistic or irregularly exaggerated contours due to artifacts.
+- Real images show a more compact distribution, indicating more consistent shape complexity."""
 
 
 st.markdown(f"**Conclusion**: {explanations[choice]}")
