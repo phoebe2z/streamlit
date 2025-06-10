@@ -24,7 +24,9 @@ with tabs[0]:
 with tabs[1]:
     st.header("📸 Image Collection")
     st.markdown("""
-    We collected **200 grayscale-processed images**, equally split between `real` and `fake`, and categorized into four feature-based regions:
+    We collected **200 grayscale-processed images**, equally split between `real` and `fake`, and categorized into six feature-based regions:
+    - Shadow
+    - Astronaut
     - Surface
     - Shadow
     - Flag
@@ -116,14 +118,25 @@ def show_horizon_histogram():
 
 def show_surface_histogram():
     st.subheader("Surface Texture Features: Energy")
-    real = np.random.normal(0.2, 0.05, 100)
-    fake = np.random.normal(0.5, 0.1, 100)
-    plt.hist(real, bins=30, alpha=0.6, label='Real')
-    plt.hist(fake, bins=30, alpha=0.6, label='Fake')
-    plt.xlabel("Energy")
-    plt.ylabel("Frequency")
-    plt.legend()
-    st.pyplot(plt)
+   # Define texture features to extract
+    properties = ['contrast', 'homogeneity', 'energy', 'correlation']
+    
+    # Extract features
+    real_features = np.load("histogram_data/real_surface_features.npy")
+    fake_features = np.load("histogram_data/fake_surface_features.npy")
+    
+    # Plot histograms
+    for prop in properties:
+        fig, ax = plt.subplots(figsize=(7, 4))
+        min_val = min(min(real_features[prop]), min(fake_features[prop]))
+        max_val = max(max(real_features[prop]), max(fake_features[prop]))
+        ax.hist(real_features[prop], bins=20, alpha=0.6, label='Real', color='skyblue', range=(min_val, max_val))
+        ax.hist(fake_features[prop], bins=20, alpha=0.6, label='Fake', color='salmon', range=(min_val, max_val))
+        ax.set_title(f"Texture Feature: {prop.capitalize()}")
+        ax.set_xlabel(prop.capitalize())
+        ax.set_ylabel("Frequency")
+        ax.legend()
+        st.pyplot(fig)
 
 def show_lander_histogram():
     st.subheader("Lander Contour Features")
@@ -180,6 +193,22 @@ explanations["Horizon"] = """
 - Real images have line angles mainly fall between -20° and +30°, which distribution is compact, showing natural orientation.
 - Fake images have strong peaks at ±90°, indicates extreme tilts or vertical lines.
 - Real images show natural and consistent horizon angles, while fake images exhibit abnormal angle peaks, useful for detecting falsification."""
+
+explanations["Surface"] = """ 
+1.Contrast
+- Fake images exhibit a broader range of contrast values, with some extreme outliers reaching above 700. Most real images cluster below 150.
+- Fake images tend to have harsher or more inconsistent textures, possibly due to rendering or compositing artifacts.
+2.Homogeneity
+- Real images show middle homogeneity overall. peaking around 0.3-0.6, suggesting more natural texture variation. While fake images have more distributed values, too high or too low.
+- Fake textures tend to be either overly smoothed or exhibit abrupt patterns, leading to a wider range of homogeneity.
+3. Energy
+- Fake images dominate in high-energy values (0.3–0.7), while real images mostly lie below 0.25.
+- Energy reflects texture repetition. High energy in fake images may indicate repetitive or templated patterns.
+4.Correlation
+- Both real and fake images have high correlation, but fake images show more clustering around 0.98–0.99.
+- High correlation in fake images suggests more uniform pixel transitions, possibly synthetic.
+
+- Texture features reveal distinct statistical tendencies between real and fake lunar surface images. Fake surfaces often appear smoother, more homogeneous, and exhibit higher repetition and artificial uniformity."""
 
 
 st.markdown(f"**Conclusion**: {explanations[choice]}")
